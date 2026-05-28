@@ -1,0 +1,54 @@
+<h2>¿Qué mejoraría de la web?</h2>
+<p class="subtitle">Análisis del sitio actual — seleccioná las mejoras que más te interesan</p>
+
+<div class="options" data-multiselect>
+
+  <div class="option" data-choice="mobile-menu" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Menú móvil (hamburger)</h3>
+      <p>En mobile no hay forma de navegar — los links del nav están ocultos con <code>hidden lg:flex</code>. Sin menú hamburger el usuario tiene que scrollear a ciegas.</p>
+      <div style="margin-top:8px">
+        <span style="background:#ef4444;color:white;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600">CRÍTICO — afecta usabilidad</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="hero-text" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Textos en el hero carousel</h3>
+      <p>El código ya tiene kicker, título y descripción definidos para cada slide — pero el componente <code>HeroCarousel</code> solo muestra las imágenes. Esos textos se están desperdiciando. Un overlay de texto bien diseñado haría el hero mucho más potente.</p>
+      <div style="margin-top:8px">
+        <span style="background:#f59e0b;color:white;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600">IMPACTO VISUAL ALTO</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="scroll-animations" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Animaciones al hacer scroll</h3>
+      <p>Las secciones aparecen de golpe. Con fade-in suaves cuando cada sección entra en viewport, el sitio se siente mucho más premium y profesional.</p>
+      <div style="margin-top:8px">
+        <span style="background:#3b82f6;color:white;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600">DISEÑO PREMIUM</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="code-split" onclick="toggleSelect(this)">
+    <div class="letter">D</div>
+    <div class="content">
+      <h3>Refactor del código (index.tsx)</h3>
+      <p>Todo el sitio está en un único archivo de ~650 líneas. Separar en componentes (HeroCarousel, ExperienceCarousel, ReservationForm, MenuSection) y archivos de datos (menu-data.ts, slides-data.ts) hace el código más fácil de mantener y escalar.</p>
+      <div style="margin-top:8px">
+        <span style="background:#8b5cf6;color:white;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600">CALIDAD DE CÓDIGO</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="margin-top:24px;padding:16px;background:rgba(0,0,0,0.04);border-radius:8px;font-size:13px;color:#666">
+  <strong>Podés seleccionar varias.</strong> Mi recomendación: A + B primero (mayor impacto), luego C y D.
+</div>

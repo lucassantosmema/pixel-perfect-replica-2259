@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparativa de mejoras — Mareas Vivas</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: #f0ece4; color: #16223a; padding: 32px 24px; }
+
+  h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; color: #16223a; }
+  .page-sub { font-size: 14px; color: #64748b; margin-bottom: 40px; }
+
+  /* Tab nav */
+  .tabs { display: flex; gap: 8px; margin-bottom: 32px; flex-wrap: wrap; }
+  .tab { padding: 8px 18px; border-radius: 6px; border: 1.5px solid #d1c9b8; background: white; font-size: 13px; font-weight: 500; cursor: pointer; color: #16223a; transition: all .15s; }
+  .tab.active { background: #1e2d4a; color: white; border-color: #1e2d4a; }
+  .tab:hover:not(.active) { border-color: #1e2d4a; }
+
+  /* Panels */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Split comparison */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 768px) { .split { grid-template-columns: 1fr; } }
+
+  .side { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+  .side-label { padding: 10px 16px; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
+  .side-label.before { background: #fef2f2; color: #b91c1c; border-bottom: 1px solid #fecaca; }
+  .side-label.after { background: #f0fdf4; color: #15803d; border-bottom: 1px solid #bbf7d0; }
+  .side-label .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .side-label.before .dot { background: #ef4444; }
+  .side-label.after .dot { background: #22c55e; }
+
+  .mockup-body { padding: 0; }
+
+  /* ─── SITE PALETTE ─── */
+  --cream: #f5f0e8;
+  --navy: #1e2d4a;
+  --gold: #c4973a;
+
+  /* ─── PANEL A: Mobile menu ─── */
+  .phone { width: 180px; margin: 20px auto; border: 2px solid #e2e8f0; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,.12); }
+  .phone-nav { background: #f5f0e8; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(30,45,74,.1); }
+  .phone-logo { font-size: 9px; font-weight: 700; color: #1e2d4a; letter-spacing: .1em; }
+  .phone-body { background: #f5f0e8; padding: 12px; height: 200px; }
+  .phone-hero { background: #2d3748; border-radius: 6px; height: 100px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; }
+  .phone-hero span { color: rgba(255,255,255,.3); font-size: 10px; }
+  .phone-section { background: white; border-radius: 6px; height: 30px; margin-bottom: 6px; }
+  .hamburger { display: flex; flex-direction: column; gap: 3px; cursor: pointer; }
+  .hamburger span { display: block; width: 18px; height: 2px; background: #1e2d4a; border-radius: 2px; }
+
+  /* Drawer overlay */
+  .drawer-overlay { position: relative; }
+  .phone-drawer { position: absolute; top: 0; right: 0; width: 120px; height: 100%; background: #f5f0e8; border-left: 1px solid rgba(30,45,74,.15); padding: 12px 10px; z-index: 10; box-shadow: -4px 0 20px rgba(0,0,0,.15); }
+  .drawer-close { font-size: 14px; color: #1e2d4a; margin-bottom: 14px; text-align: right; cursor: pointer; }
+  .drawer-link { font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: #1e2d4a; padding: 6px 0; border-bottom: 1px solid rgba(30,45,74,.08); font-weight: 600; }
+  .drawer-cta { margin-top: 12px; background: #1e2d4a; color: #f5f0e8; padding: 6px 10px; border-radius: 3px; font-size: 8px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; text-align: center; }
+
+  /* ─── PANEL B: Hero text ─── */
+  .hero-mock { position: relative; height: 220px; border-radius: 0; overflow: hidden; background: #2d3748; display: flex; align-items: flex-end; }
+  .hero-img-placeholder { position: absolute; inset: 0; background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%); display: flex; align-items: center; justify-content: center; }
+  .hero-img-placeholder span { color: rgba(255,255,255,.15); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; }
+  .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.75) 0%, rgba(0,0,0,.2) 50%, transparent 100%); }
+  .hero-text { position: relative; z-index: 2; padding: 20px; }
+  .hero-kicker { font-size: 9px; letter-spacing: .3em; text-transform: uppercase; color: #c4973a; margin-bottom: 4px; font-weight: 600; }
+  .hero-title { font-size: 22px; color: white; line-height: 1.2; font-style: italic; font-family: Georgia, serif; margin-bottom: 6px; }
+  .hero-desc { font-size: 10px; color: rgba(255,255,255,.75); line-height: 1.5; max-width: 260px; }
+  .hero-no-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 2; }
+  .hero-no-text span { background: rgba(0,0,0,.4); color: rgba(255,255,255,.5); padding: 6px 12px; border-radius: 4px; font-size: 10px; border: 1px dashed rgba(255,255,255,.3); }
+  .hero-dots { position: absolute; bottom: 10px; right: 14px; display: flex; gap: 4px; z-index: 3; }
+  .hero-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.4); }
+  .hero-dot.active { background: #c4973a; width: 12px; border-radius: 3px; }
+
+  /* ─── PANEL C: Scroll animations ─── */
+  .anim-demo { padding: 16px; }
+  .section-row { display: flex; gap: 12px; margin-bottom: 12px; align-items: center; }
+  .section-block { flex: 1; border-radius: 6px; padding: 12px; font-size: 11px; }
+  .section-block h4 { font-size: 11px; font-weight: 700; margin-bottom: 4px; }
+  .section-block p { font-size: 10px; color: #64748b; line-height: 1.4; }
+  .instant { background: #f8f8f8; border: 1px solid #e2e8f0; opacity: 1; }
+  .faded { background: #f8f8f8; border: 1px dashed #cbd5e1; opacity: .25; }
+  .fading-in { background: #f0fdf4; border: 1px solid #86efac; opacity: .7; animation: fadeUp .6s ease forwards; }
+  .arrow-col { display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 18px; }
+  @keyframes fadeUp { from { opacity:.2; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  .anim-label { font-size: 10px; color: #64748b; text-align: center; margin-bottom: 8px; letter-spacing: .05em; }
+
+  /* ─── PANEL D: Code structure ─── */
+  .code-tree { font-family: 'Menlo', 'Monaco', monospace; font-size: 11px; line-height: 1.7; padding: 16px; background: #1e293b; color: #e2e8f0; border-radius: 0 0 8px 8px; }
+  .ct-dir { color: #60a5fa; }
+  .ct-file { color: #a3e635; }
+  .ct-big { color: #f87171; font-weight: 700; }
+  .ct-ok { color: #4ade80; }
+  .ct-comment { color: #64748b; }
+  .ct-indent { padding-left: 16px; }
+  .ct-indent2 { padding-left: 32px; }
+
+  /* Description boxes */
+  .desc-box { padding: 14px 16px; font-size: 12px; line-height: 1.6; border-top: 1px solid #e2e8f0; color: #374151; }
+  .desc-box strong { color: #16223a; }
+
+  /* Section header */
+  .section-header { padding: 20px 24px 16px; }
+  .section-header h2 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .section-header p { font-size: 12px; color: #64748b; }
+
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; letter-spacing: .05em; margin-left: 8px; }
+  .badge-red { background: #fef2f2; color: #b91c1c; }
+  .badge-yellow { background: #fffbeb; color: #92400e; }
+  .badge-blue { background: #eff6ff; color: #1d4ed8; }
+  .badge-purple { background: #f5f3ff; color: #6d28d9; }
+</style>
+</head>
+<body>
+
+<h1>Comparativa de mejoras — Mareas Vivas</h1>
+<p class="page-sub">Antes vs. después para cada mejora propuesta. Clic en una pestaña para verla.</p>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('mobile')">A · Menú móvil <span class="badge badge-red">CRÍTICO</span></div>
+  <div class="tab" onclick="showTab('hero')">B · Hero con texto <span class="badge badge-yellow">VISUAL</span></div>
+  <div class="tab" onclick="showTab('anim')">C · Animaciones scroll <span class="badge badge-blue">PREMIUM</span></div>
+  <div class="tab" onclick="showTab('code')">D · Refactor código <span class="badge badge-purple">CÓDIGO</span></div>
+</div>
+
+<!-- ════════════ PANEL A: MOBILE MENU ════════════ -->
+<div class="panel active" id="panel-mobile">
+  <div class="split">
+
+    <div class="side">
+      <div class="side-label before"><div class="dot"></div> ANTES — Sin menú móvil</div>
+      <div class="section-header">
+        <h2>En mobile hoy</h2>
+        <p>El usuario ve logo y botón "Reservar" — nada más. No puede navegar.</p>
+      </div>
+      <div style="display:flex;justify-content:center;padding:0 0 20px">
+        <div class="phone">
+          <div class="phone-nav">
+            <div class="phone-logo">MAREAS VIVAS</div>
+            <div style="font-size:8px;background:#1e2d4a;color:#f5f0e8;padding:3px 7px;border-radius:2px;font-weight:700;letter-spacing:.08em">RESERVAR</div>
+          </div>
+          <div class="phone-body">
+            <div class="phone-hero"><span>IMAGEN HERO</span></div>
+            <div class="phone-section"></div>
+            <div class="phone-section" style="height:22px"></div>
+          </div>
+        </div>
+      </div>
+      <div class="desc-box">
+        ❌ <strong>Sin hamburger.</strong> Los links de nav (Menú, Nosotros, Experiencia, Contacto) están ocultos con <code>hidden lg:flex</code>. En mobile el usuario no puede saltar a ninguna sección.
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="side-label after"><div class="dot"></div> DESPUÉS — Hamburger + drawer lateral</div>
+      <div class="section-header">
+        <h2>En mobile propuesto</h2>
+        <p>Ícono hamburger que abre un drawer con todos los links.</p>
+      </div>
+      <div style="display:flex;justify-content:center;padding:0 0 20px">
+        <div class="phone" style="position:relative">
+          <div class="phone-nav">
+            <div class="phone-logo">MAREAS VIVAS</div>
+            <div class="hamburger">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+          <div class="phone-body" style="position:relative;overflow:hidden">
+            <div class="phone-hero"><span>IMAGEN HERO</span></div>
+            <div class="phone-section"></div>
+            <!-- Drawer -->
+            <div class="phone-drawer">
+              <div class="drawer-close">✕</div>
+              <div class="drawer-link">Menú</div>
+              <div class="drawer-link">Nosotros</div>
+              <div class="drawer-link">Experiencia</div>
+              <div class="drawer-link">Contacto</div>
+              <div class="drawer-cta">Reservar</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="desc-box">
+        ✅ <strong>Hamburger en nav.</strong> Al tocar, abre un drawer desde la derecha con los 4 links + botón Reservar. Se cierra al tocar fuera o en ✕.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════ PANEL B: HERO TEXT ════════════ -->
+<div class="panel" id="panel-hero">
+  <div class="split">
+
+    <div class="side">
+      <div class="side-label before"><div class="dot"></div> ANTES — Solo imagen</div>
+      <div class="section-header">
+        <h2>Hero actual</h2>
+        <p>Imágenes solas. El código tiene kicker, título y descripción pero no se muestran.</p>
+      </div>
+      <div class="hero-mock">
+        <div class="hero-img-placeholder"><span>IMAGEN HERO (pizza, milanesa…)</span></div>
+        <div class="hero-no-text"><span>Sin texto — solo imagen</span></div>
+        <div class="hero-dots">
+          <div class="hero-dot active"></div>
+          <div class="hero-dot"></div>
+          <div class="hero-dot"></div>
+          <div class="hero-dot"></div>
+        </div>
+      </div>
+      <div class="desc-box">
+        ❌ <strong>Datos desperdiciados.</strong> <code>heroSlides</code> tiene <code>kicker</code>, <code>title</code>, <code>titleItalic</code> y <code>desc</code> definidos para cada slide — pero <code>HeroCarousel</code> no los renderiza en ningún lado.
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="side-label after"><div class="dot"></div> DESPUÉS — Imagen + overlay de texto</div>
+      <div class="section-header">
+        <h2>Hero propuesto</h2>
+        <p>Texto superpuesto con gradiente suave. Mismo estilo que el carrusel de experiencia.</p>
+      </div>
+      <div class="hero-mock">
+        <div class="hero-img-placeholder"><span>IMAGEN HERO</span></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-text">
+          <div class="hero-kicker">Pizzas de autor</div>
+          <div class="hero-title">Masa madre,<br><em>fuego lento.</em></div>
+          <div class="hero-desc">Fermentación de 48 horas, mozzarella fior di latte y producto de estación.</div>
+        </div>
+        <div class="hero-dots">
+          <div class="hero-dot active"></div>
+          <div class="hero-dot"></div>
+          <div class="hero-dot"></div>
+          <div class="hero-dot"></div>
+        </div>
+      </div>
+      <div class="desc-box">
+        ✅ <strong>Texto en overlay.</strong> Gradiente oscuro en la parte inferior, kicker dorado, título en serif, descripción suave. Los datos ya existen en el código — solo hay que renderizarlos.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════ PANEL C: SCROLL ANIMATIONS ════════════ -->
+<div class="panel" id="panel-anim">
+  <div class="split">
+
+    <div class="side">
+      <div class="side-label before"><div class="dot"></div> ANTES — Aparición inmediata</div>
+      <div class="section-header">
+        <h2>Scroll actual</h2>
+        <p>Todas las secciones están visibles de golpe al cargar la página.</p>
+      </div>
+      <div class="anim-demo">
+        <div class="anim-label">⬇ Al hacer scroll, todo ya está ahí</div>
+        <div class="section-block instant" style="margin-bottom:8px"><h4>Sección Nosotros</h4><p>Aparece de golpe, sin transición</p></div>
+        <div class="section-block instant" style="margin-bottom:8px"><h4>Sección Menú</h4><p>Aparece de golpe, sin transición</p></div>
+        <div class="section-block instant"><h4>Sección Experiencia</h4><p>Aparece de golpe, sin transición</p></div>
+      </div>
+      <div class="desc-box">
+        ❌ <strong>Sin dinamismo.</strong> El contenido aparece estáticamente. En sitios de restaurante premium esto hace que la experiencia se sienta plana.
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="side-label after"><div class="dot"></div> DESPUÉS — Fade-in al entrar en viewport</div>
+      <div class="section-header">
+        <h2>Scroll propuesto</h2>
+        <p>Cada sección aparece con fade + slide suave al entrar en pantalla.</p>
+      </div>
+      <div class="anim-demo">
+        <div class="anim-label">⬇ Conforme scrolleás, las secciones aparecen</div>
+        <div class="section-block instant" style="margin-bottom:8px"><h4>Sección Nosotros</h4><p>✅ Ya visible — se mostró antes</p></div>
+        <div class="section-block fading-in" style="margin-bottom:8px"><h4>Sección Menú</h4><p>✨ Entrando ahora — fade + slide up</p></div>
+        <div class="section-block faded"><h4>Sección Experiencia</h4><p>⬇ Todavía no visible — esperando</p></div>
+      </div>
+      <div class="desc-box">
+        ✅ <strong>Con IntersectionObserver.</strong> Sin librerías externas. Cada sección hace fade-in + translateY suave al entrar en viewport. Delay escalonado para elementos dentro de cada sección.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════ PANEL D: CODE REFACTOR ════════════ -->
+<div class="panel" id="panel-code">
+  <div class="split">
+
+    <div class="side">
+      <div class="side-label before"><div class="dot"></div> ANTES — Todo en un archivo</div>
+      <div class="section-header">
+        <h2>Estructura actual</h2>
+        <p>~650 líneas en un solo archivo. Difícil de mantener.</p>
+      </div>
+      <div class="code-tree">
+        <div class="ct-dir">src/</div>
+        <div class="ct-indent">
+          <div class="ct-dir">routes/</div>
+          <div class="ct-indent">
+            <div class="ct-big">index.tsx &nbsp;&nbsp;<span style="color:#64748b">← 650+ líneas</span></div>
+            <div class="ct-comment">&nbsp;&nbsp;# datos del menú (132 líneas)</div>
+            <div class="ct-comment">&nbsp;&nbsp;# datos del hero (40 líneas)</div>
+            <div class="ct-comment">&nbsp;&nbsp;# componente Index</div>
+            <div class="ct-comment">&nbsp;&nbsp;# HeroCarousel</div>
+            <div class="ct-comment">&nbsp;&nbsp;# ExperienceCarousel</div>
+            <div class="ct-comment">&nbsp;&nbsp;# ReservationForm</div>
+          </div>
+        </div>
+      </div>
+      <div class="desc-box">
+        ❌ <strong>Monolito.</strong> Cada vez que se edita algo (menú, hero, formulario) hay que navegar por todo el archivo. Los datos mezclados con los componentes hacen que sea frágil de tocar.
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="side-label after"><div class="dot"></div> DESPUÉS — Separado por responsabilidad</div>
+      <div class="section-header">
+        <h2>Estructura propuesta</h2>
+        <p>Cada archivo tiene una sola responsabilidad. Fácil de editar y escalar.</p>
+      </div>
+      <div class="code-tree">
+        <div class="ct-dir">src/</div>
+        <div class="ct-indent">
+          <div class="ct-dir">data/</div>
+          <div class="ct-indent">
+            <div class="ct-ok">menu-data.ts &nbsp;&nbsp;<span style="color:#64748b">← carta del restaurante</span></div>
+            <div class="ct-ok">slides-data.ts &nbsp;<span style="color:#64748b">← hero + experience slides</span></div>
+          </div>
+          <div class="ct-dir">components/</div>
+          <div class="ct-indent">
+            <div class="ct-ok">HeroCarousel.tsx</div>
+            <div class="ct-ok">ExperienceCarousel.tsx</div>
+            <div class="ct-ok">ReservationForm.tsx</div>
+            <div class="ct-ok">MobileMenu.tsx</div>
+          </div>
+          <div class="ct-dir">routes/</div>
+          <div class="ct-indent">
+            <div class="ct-ok">index.tsx &nbsp;&nbsp;<span style="color:#64748b">← ~120 líneas (solo layout)</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="desc-box">
+        ✅ <strong>Separación clara.</strong> Para cambiar la carta: editás <code>menu-data.ts</code>. Para el hero: <code>slides-data.ts</code>. El archivo <code>index.tsx</code> queda en ~120 líneas, fácil de leer de un vistazo.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function showTab(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+</script>
+</body>
+</html>

@@ -7,6 +7,7 @@ import { HeroCarousel } from "@/components/HeroCarousel";
 import { ExperienceCarousel } from "@/components/ExperienceCarousel";
 import { ReservationForm } from "@/components/ReservationForm";
 import { MobileMenu } from "@/components/MobileMenu";
+import { FilosofiaVideo } from "@/components/FilosofiaVideo";
 import { menu } from "@/data/menu-data";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
@@ -32,14 +33,24 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+function scrollToSection(id: string) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.add("visible");
+  const navHeight = (document.querySelector("nav")?.getBoundingClientRect().height ?? 80) + 8;
+  const top = el.getBoundingClientRect().top + window.scrollY - navHeight;
+  window.scrollTo({ top, behavior: "smooth" });
+}
+
 function Index() {
   useScrollReveal();
 
   return (
     <div className="bg-background text-foreground min-h-screen">
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 backdrop-blur-md bg-background/85 border-b border-border">
-        <div className="max-w-7xl mx-auto flex justify-between items-center px-6 md:px-10 py-4">
+      <nav className="sticky top-0 z-50 border-b border-border">
+        <div className="absolute inset-0 bg-background/85 backdrop-blur-md pointer-events-none" />
+        <div className="relative max-w-7xl mx-auto flex justify-between items-center px-6 md:px-10 py-4">
           <a href="#" className="flex items-center gap-3">
             <img
               src={logo}
@@ -56,18 +67,18 @@ function Index() {
             </div>
           </a>
           <div className="hidden lg:flex gap-10 text-xs uppercase tracking-[0.25em] font-medium text-foreground/80">
-            <a href="#menu" className="hover:text-primary transition-colors">Menú</a>
-            <a href="#nosotros" className="hover:text-primary transition-colors">Nosotros</a>
-            <a href="#experiencia" className="hover:text-primary transition-colors">Experiencia</a>
-            <a href="#contacto" className="hover:text-primary transition-colors">Contacto</a>
+            <button onClick={() => scrollToSection("menu")} className="hover:text-primary transition-colors">Menú</button>
+            <button onClick={() => scrollToSection("nosotros")} className="hover:text-primary transition-colors">Nosotros</button>
+            <button onClick={() => scrollToSection("experiencia")} className="hover:text-primary transition-colors">Experiencia</button>
+            <button onClick={() => scrollToSection("contacto")} className="hover:text-primary transition-colors">Cómo encontrarnos</button>
           </div>
           <div className="flex items-center gap-3">
-            <a
-              href="#reservas"
+            <button
+              onClick={() => scrollToSection("reservas")}
               className="bg-primary text-primary-foreground px-5 md:px-7 py-2.5 text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-accent hover:text-accent-foreground transition-colors rounded-sm"
             >
               Reservar
-            </a>
+            </button>
             <MobileMenu />
           </div>
         </div>
@@ -76,7 +87,7 @@ function Index() {
       {/* Hero Carousel */}
       <HeroCarousel />
 
-      {/* Editorial quote divider */}
+      {/* Filosofía */}
       <section className="border-y border-border bg-card/30 reveal">
         <div className="max-w-4xl mx-auto px-6 md:px-10 py-14 text-center">
           <div className="font-display text-primary text-[10px] tracking-[0.4em] mb-5">— FILOSOFÍA —</div>
@@ -84,6 +95,7 @@ function Index() {
             "Cocinamos sin atajos. Producto, fuego y tiempo —
             <span className="text-gradient-gold not-italic"> el resto sobra</span>."
           </p>
+          <FilosofiaVideo />
         </div>
       </section>
 
@@ -205,7 +217,7 @@ function Index() {
               <ReservationForm />
             </div>
 
-            <div className="lg:col-span-2 bg-background border border-border rounded-lg overflow-hidden flex flex-col">
+            <div id="contacto" className="lg:col-span-2 bg-background border border-border rounded-lg overflow-hidden flex flex-col">
               <div className="p-8 md:p-10">
                 <h3 className="font-serif text-2xl mb-6">Cómo encontrarnos</h3>
                 <div className="grid sm:grid-cols-2 gap-6 items-start">
@@ -267,7 +279,7 @@ function Index() {
       </section>
 
       {/* Footer */}
-      <footer id="contacto" className="bg-card border-t border-primary/30 pt-20 pb-10 px-6 md:px-10">
+      <footer className="bg-card border-t border-primary/30 pt-20 pb-10 px-6 md:px-10">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-4 gap-12 mb-16">
             <div className="md:col-span-1">

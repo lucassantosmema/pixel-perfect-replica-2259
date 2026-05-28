@@ -36,7 +36,7 @@ export const menu = [
   },
   {
     title: "Burgers",
-    note: "Todas nuestras burgers pueden ser de una carne sola y cuestan la mitad.",
+    note: "Todas nuestras burguers también pueden ser de una sola carne.",
     items: [
       { n: "Doble Cuarto", d: "Doble medallón de 90gr, Provolone, Cebolla, Pepinillos, Ketchup, Mostaza", p: "10" },
       { n: "Alioli Burger", d: "Doble medallón de 90gr, Cheddar, Lechuga, Tomate, Alioli", p: "10" },
