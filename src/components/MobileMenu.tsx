@@ -17,13 +17,13 @@ export function MobileMenu() {
         <span className="block w-5 h-0.5 bg-foreground rounded-full" />
       </button>
 
-      {open && (
-        <div
-          onClick={close}
-          aria-hidden
-          className="fixed inset-0 bg-black/40 z-40 lg:hidden"
-        />
-      )}
+      <div
+        onClick={close}
+        aria-hidden
+        className={`fixed inset-0 bg-black/40 z-40 lg:hidden transition-opacity duration-300 ${
+          open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+      />
 
       <div
         className={`fixed top-0 right-0 h-full w-64 bg-background border-l border-border z-50 transform transition-transform duration-300 ease-in-out lg:hidden ${
